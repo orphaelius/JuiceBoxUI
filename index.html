@@ -83,7 +83,7 @@
         <h1 class="text-4xl md:text-5xl font-semibold leading-tight text-slate-100">LLM toolkit for Malware Analysis and <span class="text-crimson-400">reverse engineering</span>.</h1>
         <p class="mt-4 text-slateish-300">A generative solution bridging malware and RE tools with large language models, capable of statically or dynamically performing analysis and reverse-engineering.</p>
         <div class="mt-6 flex gap-3">
-          <button class="rounded-lg bg-crimson-500 px-4 py-2 text-white hover:bg-crimson-400">Primary CTA</button>
+          <button class="rounded-lg bg-crimson-500 px-4 py-2 text-white hover:bg-crimson-400">Claude Integration</button>
           <button class="rounded-lg border border-white/10 px-4 py-2 hover:bg-white/5">Secondary</button>
         </div>
       </div>
@@ -113,7 +113,7 @@
 
       <!-- Middle: Controls (slightly wider) -->
       <div class="lg:col-span-6 glass rounded-xl p-4 shadow-soft">
-        <h2 class="mb-3 text-sm tracking-wide text-slateish-300">Controls</h2>
+        <h2 class="mb-3 text-sm tracking-wide text-slateish-300">Integrated Tools</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <!-- 10 dropdowns with placeholders -->
           <template id="selectTemplate">
@@ -130,16 +130,16 @@
 
         <!-- Buttons row -->
         <div class="mt-4 flex flex-wrap gap-2">
-          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Scan</button>
-          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Analyze</button>
-          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Deobfuscate</button>
-          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Extract IOCs</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Ghidra</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Ida</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">---</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">---</button>
           <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Export Report</button>
         </div>
 
         <!-- Wheel of Fortune -->
         <div class="mt-8">
-          <h3 class="mb-2 text-slateish-300">Scenario Spinner (placeholder text): Choose a random red‑team prompt.</h3>
+          <h3 class="mb-2 text-slateish-300">Wheel of Chaos: sit back and give Claude ultimate autonomy to perform triage, analysis, and RE.</h3>
           <div class="flex items-center gap-6">
             <canvas id="wheel" width="260" height="260" class="bezel rounded-full bg-ink-800/60"></canvas>
             <div class="flex flex-col gap-2">
