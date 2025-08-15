@@ -1,2 +1,2 @@
 # JuiceBoxUI
-This is an initial draft of a local sandbox UI
+Initial draft of potential sandbox UI
