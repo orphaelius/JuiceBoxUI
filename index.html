@@ -173,6 +173,46 @@
     </div>
   </section>
 
+  <!-- Chat Window (centered below the 3 primary panes) -->
+<section id="chat" class="mx-auto max-w-4xl px-4 pb-16">
+  <div class="glass rounded-xl p-6 shadow-soft">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-semibold text-slate-100">Chat with ChatGPT (API-backed)</h2>
+      <span class="text-xs text-slateish-400">Key is stored only in memory in this page.</span>
+    </div>
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="md:col-span-2 flex flex-col">
+        <div id="chatLog" class="bezel rounded-md h-64 overflow-auto bg-ink-800/60 p-3 text-[13px] leading-5">
+          <div class="text-slateish-400">Assistant ready. Enter your API key to connect.</div>
+        </div>
+        <div class="mt-3 flex items-end gap-2">
+          <textarea id="userInput" rows="2" class="flex-1 rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm" placeholder="Type your message and press Send (Ctrl+Enter)"></textarea>
+          <button id="sendBtn" class="rounded-md bg-crimson-500 px-4 py-2 text-white hover:bg-crimson-400">Send</button>
+        </div>
+      </div>
+      <div class="md:col-span-1">
+        <label class="text-xs text-slateish-400">OpenAI API Key</label>
+        <input id="apiKey" type="password" class="mt-1 w-full rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm" placeholder="sk-..."/>
+        <div class="mt-3">
+          <label class="text-xs text-slateish-400">Model</label>
+          <select id="model" class="mt-1 w-full rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm">
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4o">gpt-4o</option>
+          </select>
+        </div>
+        <div class="mt-3">
+          <label class="text-xs text-slateish-400">System Prompt</label>
+          <textarea id="systemPrompt" rows="4" class="mt-1 w-full rounded-md border border-white/10 bg-ink-800/70 px-3 py-2 text-sm">You are ChatGPT helping with red-team UI demos. Be concise and helpful.</textarea>
+        </div>
+        <div class="mt-3 text-xs text-slateish-400">
+          Tip: For production, use a small server/edge proxy—don’t embed keys in client code.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
   <!-- Feature bullets / placeholders -->
   <section id="features" class="mx-auto max-w-7xl px-4 pb-16">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
