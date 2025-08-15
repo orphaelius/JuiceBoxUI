@@ -419,6 +419,75 @@
 
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ---------- ChatGPT Client (browser-side) ----------
+    const chat = {
+      apiKeyEl: document.getElementById('apiKey'),
+      modelEl: document.getElementById('model'),
+      sysEl: document.getElementById('systemPrompt'),
+      logEl: document.getElementById('chatLog'),
+      inputEl: document.getElementById('userInput'),
+      sendBtn: document.getElementById('sendBtn'),
+      history: []
+    };
+
+    function appendMsg(role, text){
+      const wrap = document.createElement('div');
+      wrap.className = role === 'user' ? 'text-slate-200' : 'text-slateish-300';
+      const tag = role === 'user' ? 'You' : 'Assistant';
+      wrap.innerHTML = `<span class="text-crimson-400">${tag}:</span> ${escapeHtml(text)}`;
+      chat.logEl.appendChild(wrap);
+      chat.logEl.scrollTop = chat.logEl.scrollHeight;
+    }
+    function escapeHtml(s){ return s.replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    async function sendMessage(){
+      const key = chat.apiKeyEl.value.trim();
+      if(!key){ alert('Enter your OpenAI API key first.'); return; }
+      const content = chat.inputEl.value.trim();
+      if(!content) return;
+      chat.inputEl.value = '';
+      appendMsg('user', content);
+
+      const payload = {
+        model: chat.modelEl.value || 'gpt-5-mini',
+        messages: [
+          { role: 'system', content: chat.sysEl.value || '' },
+          ...chat.history,
+          { role: 'user', content }
+        ]
+      };
+      chat.sendBtn.disabled = true;
+      try{
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${key}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok){
+          const text = await res.text();
+          appendMsg('assistant', `Error: ${res.status} — ${text}`);
+          chat.sendBtn.disabled = false; return;
+        }
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || '(no content)';
+        appendMsg('assistant', reply);
+        chat.history.push({role:'user', content});
+        chat.history.push({role:'assistant', content: reply});
+      } catch(err){
+        appendMsg('assistant', 'Request failed: ' + err.message);
+      } finally {
+        chat.sendBtn.disabled = false;
+      }
+    }
+
+    chat.sendBtn.addEventListener('click', sendMessage);
+    chat.inputEl.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey || e.metaKey) && e.key === 'Enter') sendMessage();
+    });
   </script>
 </body>
 </html>
